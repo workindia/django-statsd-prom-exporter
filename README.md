@@ -1,4 +1,4 @@
-# django-statsd-prom-exporter-middleware
+# django-statsd-prom-exporter
 
 A collection of django middleware to track django + WSGI service metrics accurately via [prom/statsd-exporter](https://github.com/prometheus/statsd_exporter) sidecar + [prometheus](https://prometheus.io/)
 
