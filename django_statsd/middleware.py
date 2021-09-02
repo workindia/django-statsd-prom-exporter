@@ -1,7 +1,12 @@
 import time
 
 from django import VERSION as DJANGO_VERSION
-from django.urls import Resolver404, resolve
+try:
+    from django.urls import Resolver404, resolve
+except ModuleNotFoundError:
+    # fallback for django < 2
+    from django.core.urlresolvers import Resolver404, resolve
+
 from django_statsd.client import client
 
 if DJANGO_VERSION >= (1, 10, 0):
