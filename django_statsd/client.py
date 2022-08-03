@@ -2,6 +2,7 @@ from django.conf import settings
 from datadog import DogStatsd
 
 _client = None
+_ignored_ips = None
 
 
 class DjangoStatsdConfigurationMissingException(Exception):
@@ -35,4 +36,8 @@ def get_client():
 if not _client:
     _client = get_client()
 
+if not _ignored_ips:
+    _ignored_ips = _get('STATSD_IGNORED_IPS', [])
+
 client = _client
+IGNORED_IPS = _ignored_ips
