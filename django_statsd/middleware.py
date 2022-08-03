@@ -9,7 +9,7 @@ except ModuleNotFoundError:
     # fallback for django < 2
     from django.core.urlresolvers import Resolver404, resolve
 
-from django_statsd.client import client, IGNORED_IPS
+from django_statsd.client import client, IGNORED_IPS, REQUEST_META_IP_PRECEDENCE_ORDER
 
 if DJANGO_VERSION >= (1, 10, 0):
     from django.utils.deprecation import MiddlewareMixin
@@ -20,8 +20,6 @@ REQUEST_LATENCY_METRIC_NAME = 'django_request_latency_seconds'
 REQUEST_COUNT_METRIC_NAME = 'django_request_count'
 REQUEST_EXCEPTION_COUNT_METRIC_NAME = 'django_request_exception_count'
 
-HTTP_IP_ADDRESS_HEADER = ['HTTP_X_ORIGINAL_FORWARDED_FOR', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR']
-
 
 def _get_url_name(request: HttpRequest):
     try:
@@ -31,7 +29,7 @@ def _get_url_name(request: HttpRequest):
 
 
 def _get_request_ip(request: HttpRequest):
-    for header in HTTP_IP_ADDRESS_HEADER:
+    for header in REQUEST_META_IP_PRECEDENCE_ORDER:
         header_value = request.META.get(header)
 
         if header_value:
