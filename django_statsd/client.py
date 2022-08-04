@@ -2,6 +2,8 @@ from django.conf import settings
 from datadog import DogStatsd
 
 _client = None
+_ignored_ips = None
+_request_meta_ip_precedence_order = None
 
 
 class DjangoStatsdConfigurationMissingException(Exception):
@@ -35,4 +37,19 @@ def get_client():
 if not _client:
     _client = get_client()
 
+if _ignored_ips is None:
+    _ignored_ips = _get('STATSD_IGNORED_IPS', [])
+
+if _request_meta_ip_precedence_order is None:
+    _request_meta_ip_precedence_order = _get('STATSD_REQUEST_META_IP_PRECEDENCE_ORDER', (
+        'HTTP_X_ORIGINAL_FORWARDED_FOR',
+        'X_FORWARDED_FOR',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_FORWARDED',
+        'HTTP_FORWARDED_FOR',
+        'REMOTE_ADDR'
+    ))
+
 client = _client
+IGNORED_IPS = _ignored_ips
+REQUEST_META_IP_PRECEDENCE_ORDER = _request_meta_ip_precedence_order

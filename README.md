@@ -24,6 +24,8 @@ STATSD_HOST = '127.0.0.1'               # required
 STATSD_PORT = 8045                      # required
 STATSD_SERVICE_NAME = 'service_name'    # optional - adds a dimension to all your metrics
 STATSD_PREFIX = ''                      # optional - adds prefix to all metrics
+STATSD_IGNORED_IPS = ['127.0.0.1']      # optional - ignore metrics from requests from listed ips
+STATSD_REQUEST_META_IP_PRECEDENCE_ORDER = ('HTTP_X_ORIGINAL_FORWARDED_FOR', 'REMOTE_ADDR') # optional - default request meta precedence order for ip address
 
 ```
 
