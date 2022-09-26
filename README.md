@@ -64,7 +64,7 @@ logger.incr('process_a_error')
 logger.decr('process_a_error')
 
 # log time taken to process a task in buckets (50PC, 90PC, 99PC)
-logger.histogram('task_identifier', 1.2)
+logger.distribition('task_identifier', 1.2)
 ```
 
 Default exporter can also be used in the folloing way :
