@@ -54,7 +54,7 @@ def get_client(exporter_alias: str = 'default'):
     service_name = exporter_config.get('STATSD_SERVICE_NAME')
     prefix = exporter_config.get('STATSD_PREFIX', None)
 
-    if not host or not port:
+    if not (host and port):
         raise DjangoStatsdConfigurationMissingException(exporter_alias)
 
     constant_tags = []
