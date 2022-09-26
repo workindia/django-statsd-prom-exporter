@@ -67,4 +67,5 @@ class StatsdLogger:
             sample_rate,
         )
 
+
 statsd_default_logger = StatsdLogger(exporter_alias="default")
