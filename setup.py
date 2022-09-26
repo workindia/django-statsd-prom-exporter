@@ -15,7 +15,7 @@ def read(filename):
 
 setup(
     name="django-statsd-prom-exporter",
-    version="0.3.0",
+    version="1.0.0",
     url="https://github.com/workindia/django-statsd-prom-exporter",
     license="MIT license",
     author="Kshitij Nagvekar",
