@@ -1,11 +1,11 @@
 # django-statsd-prom-exporter
 
-A collection of django middleware to track django + WSGI service metrics accurately via [prom/statsd-exporter](https://github.com/prometheus/statsd_exporter) sidecar + [prometheus](https://prometheus.io/)
+A collection of django middleware to track django + WSGI service metrics accurately via [prom/statsd-exporter](https://github.com/prometheus/statsd_exporter) (as sidecar / dedicated-instance) + [prometheus](https://prometheus.io/)
 
 ## Features
 * StatsdCountMetricMiddleware - Request Count & Request Exception Count metrics
 * StatsdLatencyMetricMiddleware - Request Latency metrics
-* StatsdLogger - Log a custom count metric
+* StatsdLogger - Log a custom metric
 
 
 ## Installation
@@ -18,7 +18,7 @@ pip install -U django-statsd-prom-exporter
 
 To configure django-statsd, you need to add below configuration to django settings
 
-```
+```python
 # settings.py
 STATSD_IGNORED_IPS = ['127.0.0.1']      # optional - ignore metrics from requests from listed ips
 STATSD_REQUEST_META_IP_PRECEDENCE_ORDER = ('HTTP_X_ORIGINAL_FORWARDED_FOR', 'REMOTE_ADDR') # optional - default request meta precedence order for ip address
@@ -51,16 +51,33 @@ Add the following to your `settings.py`
 2. Add `django_statsd.middleware.StatsdLatencyMetricMiddleware` to the top of your `MIDDLEWARE` to get latency metrics
 
 ### Logger
-Used to track occurrence of a specific event
-```
+Used to track custom metrics
+```python
 from django_statsd.logger import StatsdLogger
 
+logger = StatsdLogger("exporter_1")
+
 # some process ran with error
-StatsdLogger.incr('process_a_error')
+logger.incr('process_a_error')
+
 # process error resolved
-StatsdLogger.decr('process_a_error')
+logger.decr('process_a_error')
+
+# log time taken to process a task in buckets (50PC, 90PC, 99PC)
+logger.histogram('task_identifier', 1.2)
 ```
 
+Default exporter can also be used in the folloing way :
+```python
+from django_statsd.logger import statsd_default_logger as statsd_logger
+
+# some process ran with error
+statsd_logger.incr('process_a_error')
+
+# This is equivalent to...
+from django_statsd.logger import StatsdLogger
+statsd_logger = StatsdLogger("default")
+```
 
 ## Build the package
 
@@ -70,12 +87,12 @@ StatsdLogger.decr('process_a_error')
 
 ### Initialise Build Environment
 One time initialisation
-```
+```bash
 make init
 ```
 
 ### Build and install locally
-```
+```bash
 make dist
 make install
 ```
