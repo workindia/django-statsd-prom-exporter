@@ -20,13 +20,26 @@ To configure django-statsd, you need to add below configuration to django settin
 
 ```
 # settings.py
-STATSD_HOST = '127.0.0.1'               # required
-STATSD_PORT = 8045                      # required
-STATSD_SERVICE_NAME = 'service_name'    # optional - adds a dimension to all your metrics
-STATSD_PREFIX = ''                      # optional - adds prefix to all metrics
 STATSD_IGNORED_IPS = ['127.0.0.1']      # optional - ignore metrics from requests from listed ips
 STATSD_REQUEST_META_IP_PRECEDENCE_ORDER = ('HTTP_X_ORIGINAL_FORWARDED_FOR', 'REMOTE_ADDR') # optional - default request meta precedence order for ip address
 
+# required | `HOST` and `PORT` must be configured for `default` exporter. Additional exporters are optional, but if configured `HOST` and `PORT` must be specified.
+STATSD_EXPORTERS = {
+    # default exporter | required
+    'default': {
+        'HOST': 'localhost',                # required
+        'PORT': '9125',                     # required
+        'SERVICE_NAME': 'service-name',     # optional - adds a dimension to all your metrics
+        'PREFIX': 'service_prefix'          # optional - adds prefix to all metrics
+    },
+    # secondary exporter | optional
+    'exporter_1': {
+        'HOST': 'statsd.host',
+        'PORT': '9125',
+        'SERVICE_NAME': 'service-name',
+        'PREFIX': 'service-prefix'
+    },
+}
 ```
 
 
